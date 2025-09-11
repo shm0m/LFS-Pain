@@ -26,7 +26,7 @@ _start:
     jmp .halt
 
 SECTION .rodata
-msg: db "Hello World from my OS!",0
+msg: db "salut salut",0
 
 SECTION .bss
 align 16
