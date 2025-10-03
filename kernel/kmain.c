@@ -3,14 +3,21 @@
 #include "pic.h"
 #include "pit.h"
 
+#include "shell.h"
+
 void kmain(void) {
     vga_init();
-    vga_puts("hey ça marche.\n");
+    vga_puts("hey Ca marche.\n");
+    vga_puts("IDT/PIC/PIT ok. Tape sur le clavier...\n");
 
     idt_init();
     pic_init();
     pit_init(100);
 
-    vga_puts("IDT/PIC/PIT ok. Type on keyboard...\n");
-    for(;;) { __asm__ __volatile__("hlt"); }
+    shell_init();
+
+    for (;;) {
+        __asm__ __volatile__("hlt");
+    }
 }
+
