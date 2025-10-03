@@ -19,6 +19,7 @@ static inline uint8_t inb(uint16_t p) {
 }
 
 void irq1_handler(void) {
+    vga_puts("[IRQ1]");
     uint8_t scancode = inb(0x60);
     if (scancode < 128) {
         char c = azerty_map[scancode];
