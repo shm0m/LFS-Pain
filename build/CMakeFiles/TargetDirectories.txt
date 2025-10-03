@@ -1,0 +1,3 @@
+/home/shaima/Bureau/LFS-Pain/build/CMakeFiles/kernel.dir
+/home/shaima/Bureau/LFS-Pain/build/CMakeFiles/edit_cache.dir
+/home/shaima/Bureau/LFS-Pain/build/CMakeFiles/rebuild_cache.dir
