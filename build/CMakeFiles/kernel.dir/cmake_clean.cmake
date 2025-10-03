@@ -19,6 +19,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/kernel.dir/kernel/pic.c.o.d"
   "CMakeFiles/kernel.dir/kernel/pit.c.o"
   "CMakeFiles/kernel.dir/kernel/pit.c.o.d"
+  "CMakeFiles/kernel.dir/kernel/shell.c.o"
+  "CMakeFiles/kernel.dir/kernel/shell.c.o.d"
   "CMakeFiles/kernel.dir/kernel/vga.c.o"
   "CMakeFiles/kernel.dir/kernel/vga.c.o.d"
   "kernel"

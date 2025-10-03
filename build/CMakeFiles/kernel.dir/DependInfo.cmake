@@ -18,6 +18,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/shaima/Bureau/LFS-Pain/kernel/mmu.c" "CMakeFiles/kernel.dir/kernel/mmu.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/mmu.c.o.d"
   "/home/shaima/Bureau/LFS-Pain/kernel/pic.c" "CMakeFiles/kernel.dir/kernel/pic.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/pic.c.o.d"
   "/home/shaima/Bureau/LFS-Pain/kernel/pit.c" "CMakeFiles/kernel.dir/kernel/pit.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/pit.c.o.d"
+  "/home/shaima/Bureau/LFS-Pain/kernel/shell.c" "CMakeFiles/kernel.dir/kernel/shell.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/shell.c.o.d"
   "/home/shaima/Bureau/LFS-Pain/kernel/vga.c" "CMakeFiles/kernel.dir/kernel/vga.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/vga.c.o.d"
   )
 

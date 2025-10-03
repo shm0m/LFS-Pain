@@ -6,10 +6,10 @@ set(CMAKE_ASM_NASM_OBJECT_FORMAT elf32)
 
 project(myos C ASM_NASM)
 
-# ⚡️ Flags de compilation C (mode 32 bits, freestanding)
+
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32 -ffreestanding -O2 -fno-builtin -fno-stack-protector -nostdlib")
 
-# ⚡️ Liste des fichiers sources (ASM + C)
+
 add_executable(kernel
   boot/boot.asm
   boot/isr_stubs.asm
@@ -22,14 +22,15 @@ add_executable(kernel
   kernel/keyboard.c
   kernel/mmu.c
   kernel/kmalloc.c
+  kernel/shell.c
 )
 
-# ⚡️ Flags de link → forcer ld en elf_i386 + linker script
+
 set_target_properties(kernel PROPERTIES
   LINK_FLAGS "-T ${CMAKE_SOURCE_DIR}/linker.ld -nostdlib -Wl,-m,elf_i386,--build-id=none"
 )
 
-# ⚡️ Commandes post-build pour générer l'ISO bootable
+
 add_custom_command(TARGET kernel POST_BUILD
   COMMAND ${CMAKE_OBJCOPY} -O binary kernel kernel.bin
   COMMAND mkdir -p iso/boot/grub
