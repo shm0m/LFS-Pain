@@ -337,6 +337,30 @@ kernel/pit.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kernel.dir/build.make CMakeFiles/kernel.dir/kernel/pit.c.s
 .PHONY : kernel/pit.c.s
 
+kernel/shell.o: kernel/shell.c.o
+.PHONY : kernel/shell.o
+
+# target to build an object file
+kernel/shell.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kernel.dir/build.make CMakeFiles/kernel.dir/kernel/shell.c.o
+.PHONY : kernel/shell.c.o
+
+kernel/shell.i: kernel/shell.c.i
+.PHONY : kernel/shell.i
+
+# target to preprocess a source file
+kernel/shell.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kernel.dir/build.make CMakeFiles/kernel.dir/kernel/shell.c.i
+.PHONY : kernel/shell.c.i
+
+kernel/shell.s: kernel/shell.c.s
+.PHONY : kernel/shell.s
+
+# target to generate assembly for a file
+kernel/shell.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kernel.dir/build.make CMakeFiles/kernel.dir/kernel/shell.c.s
+.PHONY : kernel/shell.c.s
+
 kernel/vga.o: kernel/vga.c.o
 .PHONY : kernel/vga.o
 
@@ -396,6 +420,9 @@ help:
 	@echo "... kernel/pit.o"
 	@echo "... kernel/pit.i"
 	@echo "... kernel/pit.s"
+	@echo "... kernel/shell.o"
+	@echo "... kernel/shell.i"
+	@echo "... kernel/shell.s"
 	@echo "... kernel/vga.o"
 	@echo "... kernel/vga.i"
 	@echo "... kernel/vga.s"

@@ -207,6 +207,20 @@ CMakeFiles/kernel.dir/kernel/kmalloc.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/kernel.dir/kernel/kmalloc.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/shaima/Bureau/LFS-Pain/kernel/kmalloc.c -o CMakeFiles/kernel.dir/kernel/kmalloc.c.s
 
+CMakeFiles/kernel.dir/kernel/shell.c.o: CMakeFiles/kernel.dir/flags.make
+CMakeFiles/kernel.dir/kernel/shell.c.o: /home/shaima/Bureau/LFS-Pain/kernel/shell.c
+CMakeFiles/kernel.dir/kernel/shell.c.o: CMakeFiles/kernel.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/shaima/Bureau/LFS-Pain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/kernel.dir/kernel/shell.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/kernel.dir/kernel/shell.c.o -MF CMakeFiles/kernel.dir/kernel/shell.c.o.d -o CMakeFiles/kernel.dir/kernel/shell.c.o -c /home/shaima/Bureau/LFS-Pain/kernel/shell.c
+
+CMakeFiles/kernel.dir/kernel/shell.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/kernel.dir/kernel/shell.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/shaima/Bureau/LFS-Pain/kernel/shell.c > CMakeFiles/kernel.dir/kernel/shell.c.i
+
+CMakeFiles/kernel.dir/kernel/shell.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/kernel.dir/kernel/shell.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/shaima/Bureau/LFS-Pain/kernel/shell.c -o CMakeFiles/kernel.dir/kernel/shell.c.s
+
 # Object files for target kernel
 kernel_OBJECTS = \
 "CMakeFiles/kernel.dir/boot/boot.asm.o" \
@@ -219,7 +233,8 @@ kernel_OBJECTS = \
 "CMakeFiles/kernel.dir/kernel/pit.c.o" \
 "CMakeFiles/kernel.dir/kernel/keyboard.c.o" \
 "CMakeFiles/kernel.dir/kernel/mmu.c.o" \
-"CMakeFiles/kernel.dir/kernel/kmalloc.c.o"
+"CMakeFiles/kernel.dir/kernel/kmalloc.c.o" \
+"CMakeFiles/kernel.dir/kernel/shell.c.o"
 
 # External object files for target kernel
 kernel_EXTERNAL_OBJECTS =
@@ -235,9 +250,10 @@ kernel: CMakeFiles/kernel.dir/kernel/pit.c.o
 kernel: CMakeFiles/kernel.dir/kernel/keyboard.c.o
 kernel: CMakeFiles/kernel.dir/kernel/mmu.c.o
 kernel: CMakeFiles/kernel.dir/kernel/kmalloc.c.o
+kernel: CMakeFiles/kernel.dir/kernel/shell.c.o
 kernel: CMakeFiles/kernel.dir/build.make
 kernel: CMakeFiles/kernel.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/shaima/Bureau/LFS-Pain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking C executable kernel"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/shaima/Bureau/LFS-Pain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking C executable kernel"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/kernel.dir/link.txt --verbose=$(VERBOSE)
 	/usr/bin/objcopy -O binary kernel kernel.bin
 	mkdir -p iso/boot/grub
