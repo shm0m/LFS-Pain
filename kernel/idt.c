@@ -12,7 +12,6 @@ static idt_entry_t idt[IDT_MAX_ENTRIES];
 static idt_ptr_t idt_descriptor;
 
 extern void *isr_stub_table[];
-extern void *irq_stub_table[];
 extern void idt_load(const idt_ptr_t *descriptor);
 
 void idt_set_gate(uint8_t vector, uint32_t base, uint16_t selector, uint8_t type_attr) {
@@ -41,10 +40,6 @@ void idt_init(void) {
     const uint8_t type = IDT_FLAG_PRESENT | IDT_FLAG_RING0 | IDT_FLAG_INTERRUPT;
     for (uint8_t i = 0; i < 32; ++i) {
         idt_set_gate(i, (uint32_t)isr_stub_table[i], KERNEL_CODE_SELECTOR, type);
-    }
-
-    for (uint8_t i = 0; i < 16; ++i) {
-        idt_set_gate((uint8_t)(32 + i), (uint32_t)irq_stub_table[i], KERNEL_CODE_SELECTOR, type);
     }
 
     idt_load(&idt_descriptor);
