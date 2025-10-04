@@ -8,20 +8,21 @@
 
 void kmain(void) {
     vga_init();
-    vga_puts("hey Ca marche.\n");
-    vga_puts("IDT/PIC/PIT ok. Tape sur le clavier...\n");
+    vga_puts("c'est carre ?\n");
+    vga_puts("vasy ecris pour voir \n");
+    // for(;;);
 
-    idt_init();
-    pic_init();
-    irq_init();
-    pit_init(100);
-    keyboard_init();
-    shell_init();
+    // idt_init();
+    // pic_init();
+    // irq_init();
+    // pit_init(100);
+    // keyboard_init();
+    // shell_init();
 
-    __asm__ __volatile__("sti");
+    //__asm__ __volatile__("sti");
 
     for (;;) {
-        __asm__ __volatile__("hlt");
+         __asm__ __volatile__("hlt");
     }
 }
 
