@@ -5,10 +5,16 @@
 #include "shell.h"
 
 
+#define CP437_E_ACUTE  ((char)0x82)
+#define CP437_E_GRAVE  ((char)0x8A)
+#define CP437_C_CEDILLA ((char)0x87)
+#define CP437_A_GRAVE  ((char)0x85)
+#define CP437_U_GRAVE  ((char)0x97)
+
 static const char azerty_map[128] = {
-  0, 27, '&', 'é', '"', '\'', '(', '-', 'è', '_', 'ç', 'à', ')', '=', '\b',
+  0, 27, '&', CP437_E_ACUTE, '"', '\'', '(', '-', CP437_E_GRAVE, '_', CP437_C_CEDILLA, CP437_A_GRAVE, ')', '=', '\b',
   '\t','a','z','e','r','t','y','u','i','o','p','^','$','\n',0,
-  'q','s','d','f','g','h','j','k','l','m','ù','`',0,'*',
+  'q','s','d','f','g','h','j','k','l','m',CP437_U_GRAVE,'`',0,'*',
   'w','x','c','v','b','n',',',';',';',':','!',0,'*',0,' ',
 };
 
