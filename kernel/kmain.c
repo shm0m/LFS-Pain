@@ -2,7 +2,7 @@
 #include "idt.h"
 #include "pic.h"
 #include "pit.h"
-
+#include "keyboard.h"
 #include "shell.h"
 
 void kmain(void) {
@@ -13,8 +13,10 @@ void kmain(void) {
     idt_init();
     pic_init();
     pit_init(100);
-
+    keyboard_init();
     shell_init();
+
+    __asm__ __volatile__("sti");
 
     for (;;) {
         __asm__ __volatile__("hlt");
