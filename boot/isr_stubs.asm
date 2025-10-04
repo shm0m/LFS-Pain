@@ -3,7 +3,6 @@ BITS 32
 section .text
 
 GLOBAL isr_stub_table
-GLOBAL irq_stub_table
 GLOBAL idt_load
 
 EXTERN isr_handler
@@ -12,13 +11,6 @@ isr_stub_table:
 %assign i 0
 %rep 32
     dd isr%+i
-%assign i i+1
-%endrep
-
-irq_stub_table:
-%assign i 0
-%rep 16
-    dd irq%+i
 %assign i i+1
 %endrep
 
@@ -67,15 +59,6 @@ ISR_NOERR 28
 ISR_NOERR 29
 ISR_NOERR 30
 ISR_NOERR 31
-
-%assign i 0
-%rep 16
-irq%+i:
-    push dword 0
-    push dword (32 + i)
-    jmp isr_common
-%assign i i+1
-%endrep
 
 isr_common:
     pusha
