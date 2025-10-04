@@ -1,2 +1,2 @@
 #pragma once
-void irq1_handler(void);
+void keyboard_init(void);
