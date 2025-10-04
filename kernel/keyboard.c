@@ -25,18 +25,13 @@ static inline uint8_t inb(uint16_t p) {
     return v;
 }
 
-static void irq1_handler(void);
+static void irq1_handler(void) {
+    uint8_t sc = inb(0x60);
+    (void)sc;
+    vga_puts("[KBD]\n");
+}
 
 void keyboard_init(void) {
     irq_install_handler(1, irq1_handler);
-}
-
-static void irq1_handler(void) {
-    uint8_t scancode = inb(0x60);
-    if (scancode < 128) {
-        char c = azerty_map[scancode];
-        if (c) {
-            shell_on_char(c);
-        }
-    }
+    vga_puts("[KBD OK]\n");
 }

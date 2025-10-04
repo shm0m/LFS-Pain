@@ -1,5 +1,10 @@
+; ============================================
+;  isr_stubs.asm — Stubs ISR/IRQ pour ton OS
+;  Corrigé et stable (NASM + GRUB + GCC -m32)
+; ============================================
+
 BITS 32
-section .text
+section .text align=16
 
 GLOBAL isr_stub_table
 GLOBAL irq_stub_table
@@ -8,9 +13,10 @@ GLOBAL idt_load
 EXTERN isr_handler
 EXTERN irq_common_handler
 
-; -----------------------------
-; Table pointeurs ISRs (0..31)
-; -----------------------------
+
+; --------------------------------------------
+; Table pointeurs ISRs (exceptions CPU 0..31)
+; --------------------------------------------
 isr_stub_table:
 %assign i 0
 %rep 32
@@ -18,25 +24,27 @@ isr_stub_table:
 %assign i i+1
 %endrep
 
-; -----------------------------
+
+; --------------------------------------------
 ; Macros ISRs
-; -----------------------------
+; --------------------------------------------
 %macro ISR_NOERR 1
 isr%1:
-    push dword 0          ; faux errcode pour homogénéiser la stack
+    push dword 0          ; faux code d’erreur (pour homogénéiser la pile)
     push dword %1         ; int_no
     jmp isr_common
 %endmacro
 
 %macro ISR_ERR 1
 isr%1:
-    push dword %1         ; int_no (errcode déjà poussé par CPU)
+    push dword %1         ; int_no (le CPU a déjà poussé errcode)
     jmp isr_common
 %endmacro
 
-; -----------------------------
+
+; --------------------------------------------
 ; Exceptions CPU 0..31
-; -----------------------------
+; --------------------------------------------
 ISR_NOERR 0
 ISR_NOERR 1
 ISR_NOERR 2
@@ -70,9 +78,10 @@ ISR_NOERR 29
 ISR_NOERR 30
 ISR_NOERR 31
 
-; -----------------------------
-; Routine commune ISR
-; -----------------------------
+
+; --------------------------------------------
+; Routine commune pour les ISRs
+; --------------------------------------------
 isr_common:
     pusha
     push ds
@@ -80,7 +89,7 @@ isr_common:
     push fs
     push gs
 
-    mov ax, 0x10
+    mov ax, 0x10          ; segment data du kernel
     mov ds, ax
     mov es, ax
     mov fs, ax
@@ -99,15 +108,17 @@ isr_common:
     add esp, 8
     iretd
 
-; -----------------------------
+
+; --------------------------------------------
 ; IRQ 32..47 : table + stubs
-; -----------------------------
+; --------------------------------------------
 irq_stub_table:
 %assign i 0
 %rep 16
     dd irq%+i
 %assign i i+1
 %endrep
+
 
 %assign i 0
 %rep 16
@@ -124,7 +135,7 @@ irq%+i:
     mov fs, ax
     mov gs, ax
 
-    push dword (32 + i)   ; int_no = 0x20 + i
+    push dword %eval(32 + i)   ; ✅ corrige la mauvaise substitution NASM
     call irq_common_handler
     add esp, 4
 
@@ -137,13 +148,17 @@ irq%+i:
 %assign i i+1
 %endrep
 
-; -----------------------------
-; lidt wrapper
-; -----------------------------
+
+; --------------------------------------------
+; Fonction : charger l’IDT
+; --------------------------------------------
 idt_load:
     mov eax, [esp + 4]
     lidt [eax]
     ret
 
+
+; --------------------------------------------
 ; Évite le warning “executable stack”
+; --------------------------------------------
 section .note.GNU-stack noalloc noexec nowrite

@@ -44,6 +44,7 @@ static const char* names[32] = {
 
 void isr_handler(isr_frame_t* f){
     vga_puts("\n[EXC] #");
+    vga_puts("[ISR triggered]\n");
     int n=f->int_no; if(n<32){ 
         char s[4]; s[0]='0'+(n/10); s[1]='0'+(n%10); s[2]=' '; s[3]=0; 
         if(n<10){ s[0]='0'; s[1]='0'+n; }
