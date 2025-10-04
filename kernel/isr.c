@@ -36,16 +36,19 @@ static const char *exception_names[32] = {
     "Reserved"
 };
 
-void isr_handler(isr_frame_t *frame) {
-    if (frame->int_no < 32) {
-        vga_puts("CPU exception: ");
-        vga_puts(exception_names[frame->int_no]);
-        vga_puts("\nHalting.\n");
-    } else {
-        vga_puts("Unknown interrupt\n");
-    }
+static const char* names[32] = {
+  "DE","DB","NMI","BP","OF","BR","UD","NM","DF","CSO",
+  "TS","NP","SS","GP","PF","RES","MF","AC","MC","XF",
+  "RES","RES","RES","RES","RES","RES","RES","RES","RES","RES","RES","RES"
+};
 
-    for (;;) {
-        __asm__ __volatile__("hlt");
-    }
+void isr_handler(isr_frame_t* f){
+    vga_puts("\n[EXC] #");
+    int n=f->int_no; if(n<32){ 
+        char s[4]; s[0]='0'+(n/10); s[1]='0'+(n%10); s[2]=' '; s[3]=0; 
+        if(n<10){ s[0]='0'; s[1]='0'+n; }
+        vga_puts(s);
+        vga_puts(names[n]);
+    } else { vga_puts("??"); }
+    for(;;)__asm__ __volatile__("cli; hlt");
 }

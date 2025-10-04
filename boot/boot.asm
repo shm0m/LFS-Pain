@@ -1,31 +1,38 @@
 ; ------------------------------
-; multiboot Header obligatoire pour GRUB (c'est la seule solution que j'ai trouvée)
+; Multiboot header (GRUB lit ça pour savoir que ton kernel est bootable)
 ; ------------------------------
-SECTION .multiboot
+
+section .multiboot
 align 4
-    dd 0x1BADB002          
-    dd 0x0                 
-    dd -(0x1BADB002 + 0x0) 
+    dd 0x1BADB002               ; magic number pour GRUB
+    dd 0x00                     ; flags (0 = pas de mémoire spéciale)
+    dd -(0x1BADB002 + 0x00)     ; checksum (doit faire 0 avec les deux lignes du dessus)
 
 ; ------------------------------
-; code d'entrée kernel
+; Code d’entrée kernel
 ; ------------------------------
+
+section .text
+align 4
 BITS 32
-GLOBAL _start
-EXTERN kmain
+global _start
+extern kmain
 
-SECTION .text
 _start:
-    mov esp, stack_top
-    call kmain
+    cli
+    mov esp, stack_top          ; configure la stack
+    call kmain                  ; saute dans le C
 
 .hang:
-    hlt
-    jmp .hang
+    hlt                         ; met le CPU en pause
+    jmp .hang                   
 
+; ------------------------------
+; Stack en BSS
+; ------------------------------
 
-SECTION .bss
+section .bss
 align 16
 stack_bottom:
-    resb 4096  
+    resb 4096
 stack_top:
