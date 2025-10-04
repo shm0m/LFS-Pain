@@ -1,26 +1,51 @@
 #include "idt.h"
-extern void isr_stub_table();
-static idt_entry_t idt[256];
-static idt_ptr_t   idtp;
 
-void idt_set_gate(int n, uint32_t base, uint16_t sel, uint8_t flags){
-  idt[n].base_lo = base & 0xFFFF;
-  idt[n].sel = sel;
-  idt[n].always0 = 0;
-  idt[n].flags = flags;
-  idt[n].base_hi = (base >> 16) & 0xFFFF;
+#include <stddef.h>
+#include <stdint.h>
+
+#define KERNEL_CODE_SELECTOR 0x08
+#define IDT_FLAG_PRESENT     0x80
+#define IDT_FLAG_RING0       0x00
+#define IDT_FLAG_INTERRUPT   0x0E
+
+static idt_entry_t idt[IDT_MAX_ENTRIES];
+static idt_ptr_t idt_descriptor;
+
+extern void *isr_stub_table[];
+extern void *irq_stub_table[];
+extern void idt_load(const idt_ptr_t *descriptor);
+
+void idt_set_gate(uint8_t vector, uint32_t base, uint16_t selector, uint8_t type_attr) {
+    idt[vector].base_low  = (uint16_t)(base & 0xFFFFu);
+    idt[vector].base_high = (uint16_t)((base >> 16) & 0xFFFFu);
+    idt[vector].selector  = selector;
+    idt[vector].zero      = 0;
+    idt[vector].type_attr = type_attr;
 }
 
-void idt_load(void*);
+static void idt_clear(void) {
+    for (size_t i = 0; i < IDT_MAX_ENTRIES; ++i) {
+        idt[i].base_low = idt[i].base_high = 0;
+        idt[i].selector = 0;
+        idt[i].zero = 0;
+        idt[i].type_attr = 0;
+    }
+}
 
-void idt_init(void){
-  idtp.limit = sizeof(idt)-1;
-  idtp.base  = (uint32_t)&idt[0];
-  for(int i=0;i<256;i++) idt_set_gate(i, 0, 0x08, 0x8E);
+void idt_init(void) {
+    idt_clear();
 
-  extern uint32_t isr_stubs[];
-  for(int i=0;i<32;i++)
-    idt_set_gate(i, isr_stubs[i], 0x08, 0x8E);
+    idt_descriptor.limit = sizeof(idt) - 1;
+    idt_descriptor.base  = (uint32_t)idt;
 
-  idt_load(&idtp);
+    const uint8_t type = IDT_FLAG_PRESENT | IDT_FLAG_RING0 | IDT_FLAG_INTERRUPT;
+    for (uint8_t i = 0; i < 32; ++i) {
+        idt_set_gate(i, (uint32_t)isr_stub_table[i], KERNEL_CODE_SELECTOR, type);
+    }
+
+    for (uint8_t i = 0; i < 16; ++i) {
+        idt_set_gate((uint8_t)(32 + i), (uint32_t)irq_stub_table[i], KERNEL_CODE_SELECTOR, type);
+    }
+
+    idt_load(&idt_descriptor);
 }

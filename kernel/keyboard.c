@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "keyboard.h"
-#include "pic.h"
+#include "isr.h"
 #include "vga.h"
 #include "shell.h"
 
@@ -18,8 +18,13 @@ static inline uint8_t inb(uint16_t p) {
     return v;
 }
 
-void irq1_handler(void) {
-    vga_puts("[IRQ1]");
+static void irq1_handler(void);
+
+void keyboard_init(void) {
+    irq_install_handler(1, irq1_handler);
+}
+
+static void irq1_handler(void) {
     uint8_t scancode = inb(0x60);
     if (scancode < 128) {
         char c = azerty_map[scancode];
@@ -27,5 +32,4 @@ void irq1_handler(void) {
             shell_on_char(c);
         }
     }
-    pic_eoi(1);
 }
