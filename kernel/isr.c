@@ -1,20 +1,5 @@
 #include "isr.h"
-#include "pic.h"
 #include "vga.h"
-
-static irq_handler_t irq_handlers[16] = { 0 };
-
-void irq_install_handler(uint8_t irq, irq_handler_t handler) {
-    if (irq < 16) {
-        irq_handlers[irq] = handler;
-    }
-}
-
-void irq_uninstall_handler(uint8_t irq) {
-    if (irq < 16) {
-        irq_handlers[irq] = 0;
-    }
-}
 
 static const char *exception_names[32] = {
     "#DE Divide Error",
@@ -56,20 +41,11 @@ void isr_handler(isr_frame_t *frame) {
         vga_puts("CPU exception: ");
         vga_puts(exception_names[frame->int_no]);
         vga_puts("\nHalting.\n");
-        for (;;) {
-            __asm__ __volatile__("hlt");
-        }
-    } else if (frame->int_no >= 32 && frame->int_no < 48) {
-        uint8_t irq = (uint8_t)(frame->int_no - 32);
-        irq_handler_t handler = irq_handlers[irq];
-        if (handler) {
-            handler();
-        }
-        pic_eoi(irq);
     } else {
         vga_puts("Unknown interrupt\n");
-        for (;;) {
-            __asm__ __volatile__("hlt");
-        }
+    }
+
+    for (;;) {
+        __asm__ __volatile__("hlt");
     }
 }

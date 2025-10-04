@@ -10,8 +10,3 @@ typedef struct {
 } isr_frame_t;
 
 void isr_handler(isr_frame_t *frame);
-
-typedef void (*irq_handler_t)(void);
-
-void irq_install_handler(uint8_t irq, irq_handler_t handler);
-void irq_uninstall_handler(uint8_t irq);
