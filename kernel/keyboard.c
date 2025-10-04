@@ -3,6 +3,7 @@
 #include "isr.h"
 #include "vga.h"
 #include "shell.h"
+#include "irq.h"
 
 
 #define CP437_E_ACUTE  ((char)0x82)

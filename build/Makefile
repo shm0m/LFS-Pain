@@ -169,6 +169,30 @@ kernel/idt.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kernel.dir/build.make CMakeFiles/kernel.dir/kernel/idt.c.s
 .PHONY : kernel/idt.c.s
 
+kernel/irq.o: kernel/irq.c.o
+.PHONY : kernel/irq.o
+
+# target to build an object file
+kernel/irq.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kernel.dir/build.make CMakeFiles/kernel.dir/kernel/irq.c.o
+.PHONY : kernel/irq.c.o
+
+kernel/irq.i: kernel/irq.c.i
+.PHONY : kernel/irq.i
+
+# target to preprocess a source file
+kernel/irq.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kernel.dir/build.make CMakeFiles/kernel.dir/kernel/irq.c.i
+.PHONY : kernel/irq.c.i
+
+kernel/irq.s: kernel/irq.c.s
+.PHONY : kernel/irq.s
+
+# target to generate assembly for a file
+kernel/irq.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kernel.dir/build.make CMakeFiles/kernel.dir/kernel/irq.c.s
+.PHONY : kernel/irq.c.s
+
 kernel/isr.o: kernel/isr.c.o
 .PHONY : kernel/isr.o
 
@@ -399,6 +423,9 @@ help:
 	@echo "... kernel/idt.o"
 	@echo "... kernel/idt.i"
 	@echo "... kernel/idt.s"
+	@echo "... kernel/irq.o"
+	@echo "... kernel/irq.i"
+	@echo "... kernel/irq.s"
 	@echo "... kernel/isr.o"
 	@echo "... kernel/isr.i"
 	@echo "... kernel/isr.s"

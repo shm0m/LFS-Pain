@@ -7,7 +7,7 @@ static char buffer[128];
 static int len = 0;
 
 void shell_init(void) {
-    vga_puts("\nmyOS> ");
+    vga_puts("\nPain-OS> ");
 }
 
 static void execute_cmd() {
@@ -35,7 +35,7 @@ static void execute_cmd() {
     }
 
     len = 0;
-    vga_puts("\nmyOS> ");
+    vga_puts("\nPain-OS> ");
 }
 
 void shell_on_char(char c) {

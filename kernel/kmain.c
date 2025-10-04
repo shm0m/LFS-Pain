@@ -4,6 +4,7 @@
 #include "pit.h"
 #include "keyboard.h"
 #include "shell.h"
+#include "irq.h"
 
 void kmain(void) {
     vga_init();
@@ -12,6 +13,7 @@ void kmain(void) {
 
     idt_init();
     pic_init();
+    irq_init();
     pit_init(100);
     keyboard_init();
     shell_init();

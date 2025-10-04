@@ -13,5 +13,5 @@ C_DEFINES =
 
 C_INCLUDES = 
 
-C_FLAGS =  -m32 -ffreestanding -O2 -fno-builtin -fno-stack-protector -nostdlib
+C_FLAGS = -m32 -ffreestanding -O2 -fno-builtin -fno-stack-protector -nostdlib -fno-pic -no-pie
 

@@ -2,6 +2,7 @@
 #include "isr.h"
 #include "vga.h"
 #include <stdint.h>
+#include "irq.h"
 
 static volatile uint64_t ticks = 0;
 

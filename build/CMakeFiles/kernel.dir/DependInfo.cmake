@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/shaima/Bureau/LFS-Pain/boot/boot.asm" "CMakeFiles/kernel.dir/boot/boot.asm.o" "gcc" "CMakeFiles/kernel.dir/boot/boot.asm.o.d"
   "/home/shaima/Bureau/LFS-Pain/boot/isr_stubs.asm" "CMakeFiles/kernel.dir/boot/isr_stubs.asm.o" "gcc" "CMakeFiles/kernel.dir/boot/isr_stubs.asm.o.d"
   "/home/shaima/Bureau/LFS-Pain/kernel/idt.c" "CMakeFiles/kernel.dir/kernel/idt.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/idt.c.o.d"
+  "/home/shaima/Bureau/LFS-Pain/kernel/irq.c" "CMakeFiles/kernel.dir/kernel/irq.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/irq.c.o.d"
   "/home/shaima/Bureau/LFS-Pain/kernel/isr.c" "CMakeFiles/kernel.dir/kernel/isr.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/isr.c.o.d"
   "/home/shaima/Bureau/LFS-Pain/kernel/keyboard.c" "CMakeFiles/kernel.dir/kernel/keyboard.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/keyboard.c.o.d"
   "/home/shaima/Bureau/LFS-Pain/kernel/kmain.c" "CMakeFiles/kernel.dir/kernel/kmain.c.o" "gcc" "CMakeFiles/kernel.dir/kernel/kmain.c.o.d"
