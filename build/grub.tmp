@@ -1,2 +1,0 @@
-set timeout=0
-menuentry myOS { multiboot /boot/kernel.elf }
