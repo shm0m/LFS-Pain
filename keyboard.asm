@@ -1,20 +1,22 @@
-BITS 32
-GLOBAL read_key
+[BITS 32]
+GLOBAL read_key, update_cursor, show_cursor
 
 SECTION .data
-; Flags touches spéciales
+;------------------------------------------------------
+; Flags pour touches spéciales
+;------------------------------------------------------
 shift_pressed: db 0
 ctrl_pressed:  db 0
 alt_pressed:   db 0
 caps_lock_on:  db 0
 ext_key:       db 0
 
-; Curseur vidéo (position d’écriture)
+; Position actuelle du curseur (en octets dans 0xB8000)
 cursor_pos: dd 0
 
-;-----------------------------
-; Tables scancode -> ASCII
-;-----------------------------
+;------------------------------------------------------
+; Tables scancode -> ASCII (QWERTY)
+;------------------------------------------------------
 scancode_table_lower:
     db 0, 27, '1','2','3','4','5','6','7','8','9','0','-','=', 8
     db 9,'q','w','e','r','t','y','u','i','o','p','[',']',10
@@ -27,23 +29,31 @@ scancode_table_upper:
     db '|','Z','X','C','V','B','N','M','<','>','?',0,'*',0,' '
 scancode_table_size equ $ - scancode_table_lower
 
+
+;------------------------------------------------------
+; Section code
+;------------------------------------------------------
 SECTION .text
+
+;------------------------------------------------------
+; Routine principale de lecture clavier
+;------------------------------------------------------
 read_key:
 .wait_key:
     in al, 0x64              ; statut clavier
     test al, 1
     jz .wait_key
 
-    in al, 0x60              ; scancode
+    in al, 0x60              ; lecture scancode
     cmp al, 0xE0
-    je .ext_prefix           ; touche étendue
+    je .ext_prefix           ; touche étendue (flèches, etc.)
 
     mov bl, al
     test bl, 0x80
-    jnz .key_release         ; break code
+    jnz .key_release         ; break code (touche relâchée)
 
 .key_press:
-    ; touches spéciales
+    ; --- touches spéciales ---
     cmp bl, 0x2A             ; Shift gauche
     je .shift_down
     cmp bl, 0x36             ; Shift droite
@@ -70,85 +80,101 @@ read_key:
     je .alt_up
     jmp .wait_key
 
-.shift_down:  mov byte [shift_pressed], 1
+;------------------------------------------------------
+; Gestion des flags de touches spéciales
+;------------------------------------------------------
+.shift_down:  mov byte [shift_pressed], 1  ; touche Shift appuyée
+               jmp .wait_key
 .shift_up:    mov byte [shift_pressed], 0
+               jmp .wait_key
 .ctrl_down:   mov byte [ctrl_pressed], 1
+               jmp .wait_key
 .ctrl_up:     mov byte [ctrl_pressed], 0
+               jmp .wait_key
 .alt_down:    mov byte [alt_pressed], 1
+               jmp .wait_key
 .alt_up:      mov byte [alt_pressed], 0
-.caps_toggle:
-    xor byte [caps_lock_on], 1
-    jmp .wait_key
+               jmp .wait_key
+.caps_toggle: xor byte [caps_lock_on], 1
+               jmp .wait_key
 
-;-----------------------------
-; Retour à la ligne → extrême gauche
-;-----------------------------
+;------------------------------------------------------
+; Retour à la ligne (début de la prochaine ligne)
+;------------------------------------------------------
 .newline:
     mov eax, [cursor_pos]
-    mov edx, 160              ; taille d’une ligne
+    mov edx, 160               ; taille d’une ligne (80*2)
     xor ecx, ecx
-    div edx                    ; eax = ligne, edx = colonne actuelle
-    inc eax                    ; passer à la ligne suivante
-    cmp eax, 25                ; écran 25 lignes
+    div edx                    ; eax = ligne, edx = colonne
+    inc eax                    ; ligne suivante
+    cmp eax, 25                ; écran = 25 lignes
     jl .set_cursor
-    mov eax, 0                 ; revenir en haut si fin écran
+    mov eax, 0                 ; revenir en haut si fin d’écran
 .set_cursor:
-    imul eax, 160              ; curseur = ligne * 160 octets
+    imul eax, 160              ; nouvelle position = ligne * 160
     mov [cursor_pos], eax
+    call update_cursor
     jmp .wait_key
 
-;-----------------------------
+
+;------------------------------------------------------
 ; Touches étendues (flèches)
-;-----------------------------
+;------------------------------------------------------
 .ext_prefix:
     in al, 0x60
     mov bl, al
     mov byte [ext_key], 0
 
-    cmp bl, 0x48              ; flèche haut
+    cmp bl, 0x48              ; ↑
     je .arrow_up
-    cmp bl, 0x50              ; flèche bas
+    cmp bl, 0x50              ; ↓
     je .arrow_down
-    cmp bl, 0x4B              ; flèche gauche
+    cmp bl, 0x4B              ; ←
     je .arrow_left
-    cmp bl, 0x4D              ; flèche droite
+    cmp bl, 0x4D              ; →
     je .arrow_right
     jmp .wait_key
 
 .arrow_up:
     sub dword [cursor_pos], 160
     cmp dword [cursor_pos], 0
-    jl .cursor_top
+    jge .after_up
+    mov dword [cursor_pos], 0
+.after_up:
+    call update_cursor
     jmp .wait_key
 
 .arrow_down:
     add dword [cursor_pos], 160
     cmp dword [cursor_pos], 80*25*2 - 2
-    jle .wait_key
+    jle .after_down
     mov dword [cursor_pos], 80*25*2 - 2
+.after_down:
+    call update_cursor
     jmp .wait_key
 
 .arrow_left:
     sub dword [cursor_pos], 2
     cmp dword [cursor_pos], 0
-    jge .wait_key
+    jge .after_left
     mov dword [cursor_pos], 0
+.after_left:
+    call update_cursor
     jmp .wait_key
 
 .arrow_right:
     add dword [cursor_pos], 2
     cmp dword [cursor_pos], 80*25*2 - 2
-    jle .wait_key
+    jle .after_right
     mov dword [cursor_pos], 80*25*2 - 2
+.after_right:
+    call update_cursor
     jmp .wait_key
 
-.cursor_top:
-    mov dword [cursor_pos], 0
-    jmp .wait_key
 
-;-----------------------------
-; Affichage caractère
-;-----------------------------
+;------------------------------------------------------
+; Affichage d’un caractère ASCII
+;------------------------------------------------------
 .print_char:
     cmp byte [ext_key], 1
     je .wait_key
@@ -173,6 +199,56 @@ read_key:
     stosw
     add dword [cursor_pos], 2
     cmp dword [cursor_pos], 80*25*2
-    jb .wait_key
+    jb .continue
     mov dword [cursor_pos], 0
+.continue:
+    call update_cursor
     jmp .wait_key
+
+
+;------------------------------------------------------
+; Met à jour le curseur matériel VGA
+;------------------------------------------------------
+update_cursor:
+    push eax
+    push dx
+
+    mov eax, [cursor_pos]
+    shr eax, 1                 ; /2 = position en caractères
+    mov dx, 0x3D4
+    mov al, 0x0F
+    out dx, al
+    inc dx
+    mov al, al
+    out dx, al
+
+    dec dx
+    mov al, 0x0E
+    out dx, al
+    inc dx
+    mov al, ah
+    out dx, al
+
+    pop dx
+    pop eax
+    ret
+
+
+;------------------------------------------------------
+; Affiche le curseur (à appeler une fois au démarrage)
+;------------------------------------------------------
+show_cursor:
+    mov dx, 0x3D4
+    mov al, 0x0A
+    out dx, al
+    inc dx
+    mov al, 0x0E
+    out dx, al
+
+    dec dx
+    mov al, 0x0B
+    out dx, al
+    inc dx
+    mov al, 0x0F
+    out dx, al
+    ret
