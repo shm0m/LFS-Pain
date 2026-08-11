@@ -1,36 +1,40 @@
 # GRUB-Pain
 
-GRUB-Pain is a lightweight Linux distribution based on Linux From Scratch and Nanolinux. It is designed to be minimalistic, efficient, and user-friendly, providing a solid foundation for users who want to build their own custom Linux environment.
+A GRUB written from scratch, which hands over to a real Linux kernel. The point is to prove that it works.
+
+The bootloader starts in Real Mode, switches the CPU to Protected Mode, sets up physical memory, then passes control to an authentic Linux kernel — no existing bootloader involved at any step.
 
 ## Demo
 
-<video src="https://raw.githubusercontent.com/shm0m/GRUB-Pain/main/demo.mov" controls muted width="600"></video>
+https://github.com/user-attachments/assets/ead4596f-9346-4171-952d-075466c48215
 
-## Features
+## Boot sequence
 
-- Based on Linux From Scratch and Nanolinux
-- Lightweight and minimalistic design
-- Customizable and extensible
-- Suitable for both beginners and advanced users
+1. BIOS loads the bootloader from the first sector
+2. Real Mode → Protected Mode switch (GDT set up, segment registers reloaded)
+3. Physical memory allocation
+4. Handover to the Linux kernel
 
 ## Getting Started
-To get started with GRUB-Pain, follow these steps:
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/shm0m/GRUB-Pain.git
    ```
 
-2. Execute the iso file with qemu:
+2. Run the ISO with qemu:
    ```bash
    qemu-system-x86_64 -cdrom iso/painos.iso -m 512
-   ```  
+   ```
 
-3. Have fun exploring GRUB-Pain!
+## Built with
 
-## Contributing
+C, x86 assembly, GNU Make, QEMU
 
-Shaima DEROUICH 
-Andy ANDRIAMANGA
+## Authors
+
+Shaima DEROUICH  
+Andy ANDRIAMANGA  
 Matéo DEROUBAIX
 
-Contributions are welcome! If you would like to contribute to GRUB-Pain, please fork the repository and submit a pull request with your changes.
+Contributions are welcome — fork the repository and submit a pull request.
